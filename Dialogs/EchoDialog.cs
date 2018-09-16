@@ -22,18 +22,18 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
         {
             var message = await argument;
 
-            if (message.Text == "reset")
+            if (message.Text == "Open Garage Door")
             {
                 PromptDialog.Confirm(
                     context,
                     AfterResetAsync,
-                    "Are you sure you want to reset the count?",
+                    "Are you sure you want to open the garage door?",
                     "Didn't get that!",
                     promptStyle: PromptStyle.Auto);
             }
             else
             {
-                await context.PostAsync($"{this.count++}: You said {message.Text}");
+                await context.PostAsync($"Not Valid prompt {this.count++}: {message.Text}");
                 context.Wait(MessageReceivedAsync);
             }
         }
@@ -44,11 +44,11 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             if (confirm)
             {
                 this.count = 1;
-                await context.PostAsync("Reset count.");
+                await context.PostAsync("Opening the Garage Door");
             }
             else
             {
-                await context.PostAsync("Did not reset count.");
+                await context.PostAsync("Not opening the garage door.");
             }
             context.Wait(MessageReceivedAsync);
         }
