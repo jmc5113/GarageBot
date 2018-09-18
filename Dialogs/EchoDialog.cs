@@ -22,6 +22,32 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
         {
             var message = await argument;
 
+            var client = new HttpClient();
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+
+            // This app ID is for a public sample app that recognizes requests to turn on and turn off lights
+            var luisAppId = "5bf86ab7-aafc-4c6c-a895-34443646bbb0";
+            var endpointKey = "36a92f1fcea34f52bd3b4ea57b191965";
+
+            // The request header contains your subscription key
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", endpointKey);
+
+            // The "q" parameter contains the utterance to send to LUIS
+            queryString["q"] = message;
+
+            // These optional request parameters are set to their default values
+            queryString["timezoneOffset"] = "0";
+            queryString["verbose"] = "false";
+            queryString["spellCheck"] = "false";
+            queryString["staging"] = "false";
+
+            var endpointUri = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/" + luisAppId + "?" + queryString;
+            var response = await client.GetAsync(endpointUri);
+
+            var strResponseContent = await response.Content.ReadAsStringAsync();
+
+            // Display the JSON result from LUIS
+            Console.WriteLine(strResponseContent.ToString());
             if (message.Text == "Open Garage Door")
             {
                 PromptDialog.Confirm(
@@ -33,7 +59,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             }
             else
             {
-                await context.PostAsync($"Not Valid prompt {this.count++}: {message.Text}");
+                await context.PostAsync($"Response {this.count++}: {message.Text}");
                 context.Wait(MessageReceivedAsync);
             }
         }
