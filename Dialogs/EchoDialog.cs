@@ -47,7 +47,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             var strResponseContent = await response.Content.ReadAsStringAsync();
 
             // Display the JSON result from LUIS
-            Console.WriteLine(strResponseContent.ToString());
+            //Console.WriteLine(strResponseContent.ToString());
             if (message.Text == "Open Garage Door")
             {
                 PromptDialog.Confirm(
@@ -59,7 +59,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             }
             else
             {
-                await context.PostAsync($"Response {this.count++}: {message.Text}");
+                await context.PostAsync($"Response {this.count++}: {message.Text} : {strResponseContent.ToString()}");
                 context.Wait(MessageReceivedAsync);
             }
         }
