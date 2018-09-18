@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Builder.Dialogs;
 using System.Net.Http;
-
+using System.Web;
 
 namespace Microsoft.Bot.Sample.SimpleEchoBot
 {
@@ -33,7 +33,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", endpointKey);
 
             // The "q" parameter contains the utterance to send to LUIS
-            queryString["q"] = message;
+            queryString["q"] = message.Text;
 
             // These optional request parameters are set to their default values
             queryString["timezoneOffset"] = "0";
