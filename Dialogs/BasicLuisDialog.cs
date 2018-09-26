@@ -27,14 +27,14 @@ namespace Microsoft.Bot.Sample.LuisBot
 
         // Go to https://luis.ai and create a new intent, then train/publish your luis app.
         // Finally replace "Greeting" with the name of your newly created intent in the following handler
-        [LuisIntent("Greeting")]
-        public async Task GreetingIntent(IDialogContext context, LuisResult result)
+        [LuisIntent("HomeAutomation.On")]
+        public async Task HomeAutomationOnIntent(IDialogContext context, LuisResult result)
         {
             await this.ShowLuisResult(context, result);
         }
 
-        [LuisIntent("Cancel")]
-        public async Task CancelIntent(IDialogContext context, LuisResult result)
+        [LuisIntent("HomeAutomation.Off")]
+        public async Task HomeAutomationOffIntent(IDialogContext context, LuisResult result)
         {
             await this.ShowLuisResult(context, result);
         }
