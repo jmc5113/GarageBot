@@ -6,6 +6,8 @@ using Microsoft.Bot.Builder.Dialogs;
 using System.Net.Http;
 using System.Web;
 
+using HttpUtils;
+
 namespace Microsoft.Bot.Sample.SimpleEchoBot
 {
     [Serializable]
@@ -71,6 +73,11 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             {
                 this.count = 1;
                 await context.PostAsync("Opening the Garage Door");
+                var client = new RestClient();
+                client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437e/led?139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+                client.Method = HttpVerb.POST;
+                client.PostData = "{on}";
+                var json = client.MakeRequest();
             }
             else
             {
