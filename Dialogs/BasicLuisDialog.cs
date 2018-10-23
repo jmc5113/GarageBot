@@ -37,9 +37,10 @@ namespace Microsoft.Bot.Sample.LuisBot
 
             //Test Open
             var client = new RestClient();
-            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437e/led?139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
             client.Method = HttpVerb.POST;
-            client.PostData = "{on}";
+            client.PostData = "&arg=on";
+            client.ContentType = "application/x-www-form-urlencoded";
             var json = client.MakeRequest();
         }
 
@@ -50,9 +51,10 @@ namespace Microsoft.Bot.Sample.LuisBot
 
             //Test Close
             var client = new RestClient();
-            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437e/led?139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
             client.Method = HttpVerb.POST;
-            client.PostData = "{off}";
+            client.PostData = "&arg=off";
+            client.ContentType = "application/x-www-form-urlencoded";
             var json = client.MakeRequest();
         }
 
