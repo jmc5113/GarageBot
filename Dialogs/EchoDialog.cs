@@ -28,8 +28,8 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
             // This app ID is for a public sample app that recognizes requests to turn on and turn off lights
-            var luisAppId = "5bf86ab7-aafc-4c6c-a895-34443646bbb0"; 5bf86ab7aafc4c6ca89534443646bbb0
-                    var endpointKey = "36a92f1fcea34f52bd3b4ea57b191965";
+            var luisAppId = "5bf86ab7-aafc-4c6c-a895-34443646bbb0"; 
+            var endpointKey = "36a92f1fcea34f52bd3b4ea57b191965";
 
             // The request header contains your subscription key
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", endpointKey);
