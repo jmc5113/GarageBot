@@ -34,14 +34,16 @@ namespace Microsoft.Bot.Sample.LuisBot
         public async Task HomeAutomationTurnOnIntent(IDialogContext context, LuisResult result)
         {
             await this.ShowLuisResult(context, result);
-
+            PromptDialog.Confirm(context, AfterResetAsync,
+                "Are you sure you want to open the garage door?",
+                "Didn't get that!", promptStyle: PromptStyle.Auto);
             await context.PostAsync("Opening the Garage Door");
-            var client = new RestClient();
-            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
-            client.Method = HttpVerb.POST;
-            client.PostData = "&arg=on";
-            client.ContentType = "application/x-www-form-urlencoded";
-            var json = client.MakeRequest();
+            //var client = new RestClient();
+            //client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+            //client.Method = HttpVerb.POST;
+            //client.PostData = "&arg=on";
+            //client.ContentType = "application/x-www-form-urlencoded";
+            //var json = client.MakeRequest();
         }
 
         [LuisIntent("HomeAutomation.TurnOff")]
@@ -56,6 +58,27 @@ namespace Microsoft.Bot.Sample.LuisBot
             client.PostData = "&arg=off";
             client.ContentType = "application/x-www-form-urlencoded";
             var json = client.MakeRequest();
+        }
+
+        public async Task AfterResetAsync(IDialogContext context, IAwaitable<bool> argument)
+        {
+            var confirm = await argument;
+            if (confirm)
+            {
+                //this.count = 1;
+                await context.PostAsync("Opening the Garage Door");
+                var client = new RestClient();
+                client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+                client.Method = HttpVerb.POST;
+                client.PostData = "&arg=on";
+                client.ContentType = "application/x-www-form-urlencoded";
+                var json = client.MakeRequest();
+            }
+            else
+            {
+                await context.PostAsync("Not opening the garage door.");
+            }
+            //context.Wait(HomeAutomationTurnOnIntent);
         }
 
         [LuisIntent("Help")]
