@@ -49,7 +49,7 @@ namespace Microsoft.Bot.Sample.LuisBot
             response.Speak = "Opening the garage door";
             response.InputHint = InputHints.IgnoringInput;
             await context.PostAsync(response);
-            //context.Wait(MessageReceived);
+            context.Wait(MessageReceived);
         }
 
         [LuisIntent("HomeAutomation.TurnOff")]
@@ -64,6 +64,14 @@ namespace Microsoft.Bot.Sample.LuisBot
             client.PostData = "&arg=off";
             client.ContentType = "application/x-www-form-urlencoded";
             var json = client.MakeRequest();
+
+            // Prepare response
+            var response = context.MakeMessage();
+            response.Text = "Closing the garage door!";
+            response.Speak = "Closing the garage door";
+            response.InputHint = InputHints.IgnoringInput;
+            await context.PostAsync(response);
+            context.Wait(MessageReceived);
         }
 
         public async Task AfterResetAsync(IDialogContext context, IAwaitable<bool> argument)
