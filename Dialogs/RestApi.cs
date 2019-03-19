@@ -13,92 +13,98 @@ public enum HttpVerb
 
 namespace HttpUtils
 {
-  public class RestClient
-  {
-    public string EndPoint { get; set; }
-    public HttpVerb Method { get; set; }
-    public string ContentType { get; set; }
-    public string PostData { get; set; }
-
-    public RestClient()
+    public class RestClient
     {
-      EndPoint = "";
-      Method = HttpVerb.GET;
-      ContentType = "text/xml";
-      PostData = "";
-    }
-    public RestClient(string endpoint)
-    {
-      EndPoint = endpoint;
-      Method = HttpVerb.GET;
-      ContentType = "text/xml";
-      PostData = "";
-    }
-    public RestClient(string endpoint, HttpVerb method)
-    {
-      EndPoint = endpoint;
-      Method = method;
-      ContentType = "text/xml";
-      PostData = "";
-    }
+        public string EndPoint { get; set; }
+        public HttpVerb Method { get; set; }
+        public string ContentType { get; set; }
+        public string PostData { get; set; }
 
-    public RestClient(string endpoint, HttpVerb method, string postData)
-    {
-      EndPoint = endpoint;
-      Method = method;
-      ContentType = "text/xml";
-      PostData = postData;
-    }
-
-
-    public string MakeRequest()
-    {
-      return MakeRequest("");
-    }
-
-    public string MakeRequest(string parameters)
-    {
-      var request = (HttpWebRequest)WebRequest.Create(EndPoint + parameters);
-
-      request.Method = Method.ToString();
-      request.ContentLength = 0;
-      request.ContentType = ContentType;
-
-      if (!string.IsNullOrEmpty(PostData) && Method == HttpVerb.POST)
-      {
-        var encoding = new UTF8Encoding();
-        var bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(PostData);
-        request.ContentLength = bytes.Length;
-
-        using (var writeStream = request.GetRequestStream())
+        public RestClient()
         {
-          writeStream.Write(bytes, 0, bytes.Length);
+            EndPoint = "";
+            Method = HttpVerb.GET;
+            ContentType = "text/xml";
+            PostData = "";
         }
-      }
-
-      using (var response = (HttpWebResponse)request.GetResponse())
-      {
-        var responseValue = string.Empty;
-
-        if (response.StatusCode != HttpStatusCode.OK)
+        public RestClient(string endpoint)
         {
-          var message = String.Format("Request failed. Received HTTP {0}", response.StatusCode);
-          throw new ApplicationException(message);
+            EndPoint = endpoint;
+            Method = HttpVerb.GET;
+            ContentType = "text/xml";
+            PostData = "";
+        }
+        public RestClient(string endpoint, HttpVerb method)
+        {
+            EndPoint = endpoint;
+            Method = method;
+            ContentType = "text/xml";
+            PostData = "";
         }
 
-        // grab the response
-        using (var responseStream = response.GetResponseStream())
+        public RestClient(string endpoint, HttpVerb method, string postData)
         {
-          if (responseStream != null)
-            using (var reader = new StreamReader(responseStream))
+            EndPoint = endpoint;
+            Method = method;
+            ContentType = "text/xml";
+            PostData = postData;
+        }
+
+
+        public string MakeRequest()
+        {
+            return MakeRequest("");
+        }
+
+        public string MakeRequest(string parameters)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(EndPoint + parameters);
+
+            request.Method = Method.ToString();
+            request.ContentLength = 0;
+            request.ContentType = ContentType;
+
+            if (!string.IsNullOrEmpty(PostData) && Method == HttpVerb.POST)
             {
-              responseValue = reader.ReadToEnd();
+                var encoding = new UTF8Encoding();
+                var bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(PostData);
+                request.ContentLength = bytes.Length;
+
+                using (var writeStream = request.GetRequestStream())
+                {
+                    writeStream.Write(bytes, 0, bytes.Length);
+                }
             }
+
+            try
+            {
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    var responseValue = string.Empty;
+
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return String.Format("Request failed. Received HTTP {0}", response.StatusCode);
+                    }
+
+                    // grab the response
+                    using (var responseStream = response.GetResponseStream())
+                    {
+                        if (responseStream != null)
+                            using (var reader = new StreamReader(responseStream))
+                            {
+                                responseValue = reader.ReadToEnd();
+                            }
+                    }
+
+                    return responseValue;
+                }
+            }
+            catch(Exception e)
+            {
+                return "failed";
+            }
+
         }
-
-        return responseValue;
-      }
-    }
-
-  } // class
+    } // class
 }

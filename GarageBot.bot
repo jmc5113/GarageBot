@@ -1,0 +1,28 @@
+{
+    "name": "GarageBot",
+    "description": "",
+    "services": [
+        {
+            "type": "endpoint",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:3984/api/messages",
+            "id": "917fb930-4a1b-11e9-877c-23ec0168d039",
+            "name": "http://localhost:3984/api/messages"
+        },
+        {
+            "type": "luis",
+            "appId": "5bf86ab7-aafc-4c6c-a895-34443646bbb0",
+            "authoringKey": "36a92f1fcea34f52bd3b4ea57b191965",
+            "id": "5bf86ab7-aafc-4c6c-a895-34443646bbb0",
+            "name": "Home Automation",
+            "region": "westus",
+            "subscriptionKey": "36a92f1fcea34f52bd3b4ea57b191965",
+            "version": "0.1"
+        }
+    ],
+    "padlock": "",
+    "version": "2.0",
+    "path": "C:\\Code\\JaysGarageBot\\GarageBot.bot",
+    "overrides": null
+}

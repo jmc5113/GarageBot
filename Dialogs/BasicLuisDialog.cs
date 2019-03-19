@@ -41,17 +41,27 @@ namespace Microsoft.Bot.Sample.LuisBot
             client.Method = HttpVerb.POST;
             client.PostData = "&arg=on";
             client.ContentType = "application/x-www-form-urlencoded";
-            var json = client.MakeRequest();
+            string status = client.MakeRequest();
 
-            // Prepare response
-            var response = context.MakeMessage();
-            response.Text = "Opening the garage door!";
-            response.Speak = "Opening the garage door";
-            response.InputHint = InputHints.IgnoringInput;
-            await context.PostAsync(response);
-            //context.Wait(MessageReceived);
-
-            await context.PostAsync("Garage Door Opened");
+            if (status.Contains("failed"))
+            {
+                // Prepare response
+                IMessageActivity response = context.MakeMessage();
+                response.Text = "Failed to open the garage door!";
+                response.Speak = "No can do senior";
+                response.InputHint = InputHints.IgnoringInput;
+                await context.PostAsync(response);
+            }
+            else
+            {
+                // Prepare response
+                IMessageActivity response = context.MakeMessage();
+                response.Text = "Opening the garage door!";
+                response.Speak = "Open Sesame";
+                response.InputHint = InputHints.IgnoringInput;
+                await context.PostAsync(response);
+            }
+            await context.PostAsync("Open Intent Finished: " + status);
         }
 
         [LuisIntent("HomeAutomation.TurnOff")]
@@ -65,17 +75,29 @@ namespace Microsoft.Bot.Sample.LuisBot
             client.Method = HttpVerb.POST;
             client.PostData = "&arg=off";
             client.ContentType = "application/x-www-form-urlencoded";
-            var json = client.MakeRequest();
+            string status = client.MakeRequest();
 
-            // Prepare response
-            var response = context.MakeMessage();
-            response.Text = "Closing the garage door!";
-            response.Speak = "Closing the garage door";
-            response.InputHint = InputHints.IgnoringInput;
-            await context.PostAsync(response);
-            //context.Wait(MessageReceived);
+            if (status.Contains("failed"))
+            {
+                // Prepare response
+                IMessageActivity response = context.MakeMessage();
+                response.Text = "Failed to close the garage door!";
+                response.Speak = "No can do senior";
+                response.InputHint = InputHints.IgnoringInput;
+                await context.PostAsync(response);
+            }
+            else
+            {
+                // Prepare response
+                var response = context.MakeMessage();
+                response.Text = "Closing the garage door!";
+                response.Speak = "Closing the garage door";
+                response.InputHint = InputHints.IgnoringInput;
+                await context.PostAsync(response);
+                //context.Wait(MessageReceived);
+            }
 
-            await context.PostAsync("Garage Door Closed");
+            await context.PostAsync("Close Intent Finished: " + status);
         }
 
         public async Task AfterResetAsync(IDialogContext context, IAwaitable<bool> argument)
