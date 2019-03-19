@@ -49,7 +49,7 @@ namespace Microsoft.Bot.Sample.LuisBot
             response.Speak = "Opening the garage door";
             response.InputHint = InputHints.IgnoringInput;
             await context.PostAsync(response);
-            context.Wait(MessageReceived);
+            //context.Wait(MessageReceived);
 
             await context.PostAsync("Garage Door Opened");
         }
@@ -73,7 +73,7 @@ namespace Microsoft.Bot.Sample.LuisBot
             response.Speak = "Closing the garage door";
             response.InputHint = InputHints.IgnoringInput;
             await context.PostAsync(response);
-            context.Wait(MessageReceived);
+            //context.Wait(MessageReceived);
 
             await context.PostAsync("Garage Door Closed");
         }
