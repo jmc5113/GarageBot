@@ -8,6 +8,7 @@ using Microsoft.Bot.Builder.Luis.Models;
 using System.Text;
 
 using HttpUtils;
+using Microsoft.Bot.Connector;
 
 namespace Microsoft.Bot.Sample.LuisBot
 {
