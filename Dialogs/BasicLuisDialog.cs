@@ -50,6 +50,8 @@ namespace Microsoft.Bot.Sample.LuisBot
             response.InputHint = InputHints.IgnoringInput;
             await context.PostAsync(response);
             context.Wait(MessageReceived);
+
+            await context.PostAsync("Garage Door Opened");
         }
 
         [LuisIntent("HomeAutomation.TurnOff")]
@@ -72,6 +74,8 @@ namespace Microsoft.Bot.Sample.LuisBot
             response.InputHint = InputHints.IgnoringInput;
             await context.PostAsync(response);
             context.Wait(MessageReceived);
+
+            await context.PostAsync("Garage Door Closed");
         }
 
         public async Task AfterResetAsync(IDialogContext context, IAwaitable<bool> argument)
