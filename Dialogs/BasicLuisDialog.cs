@@ -47,9 +47,9 @@ namespace Microsoft.Bot.Sample.LuisBot
             var response = context.MakeMessage();
             response.Text = "Opening the garage door!";
             response.Speak = "Opening the garage door";
-            response.InputHint = InputHints.ExpectingInput;
+            response.InputHint = InputHints.AcceptingInput;
             await context.PostAsync(response);
-            context.Wait(MessageReceived);
+            //context.Wait(MessageReceived);
         }
 
         [LuisIntent("HomeAutomation.TurnOff")]
