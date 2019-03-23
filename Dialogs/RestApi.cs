@@ -51,14 +51,14 @@ namespace HttpUtils
         }
 
 
-        public string MakeRequest()
-        {
-            return MakeRequest("");
-        }
+        //public string MakeRequest()
+        //{
+        //    return MakeRequest("");
+        //}
 
-        public string MakeRequest(string parameters)
+        public string MakeRequest(/*string parameters*/)
         {
-            var request = (HttpWebRequest)WebRequest.Create(EndPoint + parameters);
+            var request = (HttpWebRequest)WebRequest.Create(EndPoint /*+ parameters*/);
 
             request.Method = Method.ToString();
             request.ContentLength = 0;
@@ -80,14 +80,14 @@ namespace HttpUtils
             {
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    var responseValue = string.Empty;
+                    string responseValue = string.Empty;
 
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
                         return String.Format("Request failed. Received HTTP {0}", response.StatusCode);
                     }
 
-                    // grab the response
+                    //grab the response
                     using (var responseStream = response.GetResponseStream())
                     {
                         if (responseStream != null)
@@ -100,9 +100,9 @@ namespace HttpUtils
                     return responseValue;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                return "failed";
+                return e.Message;
             }
 
         }

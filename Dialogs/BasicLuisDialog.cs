@@ -6,6 +6,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using System.Text;
+using Newtonsoft.Json;
 
 using HttpUtils;
 using Microsoft.Bot.Connector;
@@ -29,6 +30,39 @@ namespace Microsoft.Bot.Sample.LuisBot
             await this.ShowLuisResult(context, result);
         }
 
+        [LuisIntent("HomeAutomation.Status")]
+        public async Task HomeAutomationStatus(IDialogContext context, LuisResult result)
+        {
+            var client = new RestClient();
+            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/doorStatus?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+            client.Method = HttpVerb.GET;
+            client.ContentType = "application/x-www-form-urlencoded";
+            string status = client.MakeRequest();
+            dynamic j = JsonConvert.DeserializeObject(status);
+            int doorStatus = j.result;
+
+            if (doorStatus == 0)
+            {
+                // The door is currently closed
+                IMessageActivity response = context.MakeMessage();
+                response.Text = "The garage door is currently closed";
+                response.Speak = "The garage door is currently closed";
+                response.InputHint = InputHints.IgnoringInput;
+                await context.PostAsync(response);
+            }
+            else
+            {
+                // The door is currently open
+                IMessageActivity response = context.MakeMessage();
+                response.Text = "The garage door is currently open";
+                response.Speak = "The garage door is currently open";
+                response.InputHint = InputHints.IgnoringInput;
+                await context.PostAsync(response);
+            }
+
+            await context.PostAsync("Open Intent Finished: " + status);
+        }
+
         // Go to https://luis.ai and create a new intent, then train/publish your luis app.
         // Finally replace "Greeting" with the name of your newly created intent in the following handler
         [LuisIntent("HomeAutomation.TurnOn")]
@@ -37,30 +71,49 @@ namespace Microsoft.Bot.Sample.LuisBot
             //await this.ShowLuisResult(context, result);
 
             var client = new RestClient();
-            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
-            client.Method = HttpVerb.POST;
-            client.PostData = "&arg=on";
+            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/doorStatus?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+            client.Method = HttpVerb.GET;
             client.ContentType = "application/x-www-form-urlencoded";
             string status = client.MakeRequest();
+            dynamic j = JsonConvert.DeserializeObject(status);
+            int doorStatus = j.result;
 
-            if (status.Contains("failed"))
+            if(doorStatus == 0)
             {
-                // Prepare response
-                IMessageActivity response = context.MakeMessage();
-                response.Text = "Failed to open the garage door!";
-                response.Speak = "No can do senior";
-                response.InputHint = InputHints.IgnoringInput;
-                await context.PostAsync(response);
+                client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+                client.Method = HttpVerb.POST;
+                client.PostData = "&arg=on";
+                client.ContentType = "application/x-www-form-urlencoded";
+                status = client.MakeRequest();
+                if (status.Contains("failed"))
+                {
+                    // Failed open door request
+                    IMessageActivity response = context.MakeMessage();
+                    response.Text = "Failed to open the garage door!";
+                    response.Speak = "No can do senior";
+                    response.InputHint = InputHints.IgnoringInput;
+                    await context.PostAsync(response);
+                }
+                else
+                {
+                    // Success, Opening the garage door.
+                    IMessageActivity response = context.MakeMessage();
+                    response.Text = "Opening the garage door!";
+                    response.Speak = "Open Sesame";
+                    response.InputHint = InputHints.IgnoringInput;
+                    await context.PostAsync(response);
+                }
             }
             else
             {
-                // Prepare response
+                // The door is already open
                 IMessageActivity response = context.MakeMessage();
-                response.Text = "Opening the garage door!";
-                response.Speak = "Open Sesame";
+                response.Text = "The garage door is already open";
+                response.Speak = "Silly human, the door is already open";
                 response.InputHint = InputHints.IgnoringInput;
                 await context.PostAsync(response);
             }
+
             await context.PostAsync("Open Intent Finished: " + status);
         }
 
@@ -69,32 +122,49 @@ namespace Microsoft.Bot.Sample.LuisBot
         {
             //await this.ShowLuisResult(context, result);
 
-            //await context.PostAsync("Closing the Garage Door");
             var client = new RestClient();
-            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
-            client.Method = HttpVerb.POST;
-            client.PostData = "&arg=off";
+            client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/doorStatus?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+            client.Method = HttpVerb.GET;
             client.ContentType = "application/x-www-form-urlencoded";
             string status = client.MakeRequest();
+            dynamic j = JsonConvert.DeserializeObject(status);
+            int doorStatus = j.result;
 
-            if (status.Contains("failed"))
+            if (doorStatus == 100)
             {
-                // Prepare response
-                IMessageActivity response = context.MakeMessage();
-                response.Text = "Failed to close the garage door!";
-                response.Speak = "No can do senior";
-                response.InputHint = InputHints.IgnoringInput;
-                await context.PostAsync(response);
+                client.EndPoint = @"https://api.particle.io/v1/devices/2c0026000f47363336383437/led?access_token=139a6bbeb6a6463a35a5a06c472d7f32ab8dc9bb";
+                client.Method = HttpVerb.POST;
+                client.PostData = "&arg=off";
+                client.ContentType = "application/x-www-form-urlencoded";
+                status = client.MakeRequest();
+
+                if (status.Contains("failed"))
+                {
+                    // Failed request to close the garage door
+                    IMessageActivity response = context.MakeMessage();
+                    response.Text = "Failed to close the garage door!";
+                    response.Speak = "No can do senior";
+                    response.InputHint = InputHints.IgnoringInput;
+                    await context.PostAsync(response);
+                }
+                else
+                {
+                    // Success - Closing the garage door.
+                    var response = context.MakeMessage();
+                    response.Text = "Closing the garage door!";
+                    response.Speak = "Your wish is my command";
+                    response.InputHint = InputHints.IgnoringInput;
+                    await context.PostAsync(response);
+                }
             }
             else
             {
-                // Prepare response
-                var response = context.MakeMessage();
-                response.Text = "Closing the garage door!";
-                response.Speak = "Closing the garage door";
+                // The door is already open
+                IMessageActivity response = context.MakeMessage();
+                response.Text = "The garage door is already closed";
+                response.Speak = "Silly human, the door is already closed";
                 response.InputHint = InputHints.IgnoringInput;
                 await context.PostAsync(response);
-                //context.Wait(MessageReceived);
             }
 
             await context.PostAsync("Close Intent Finished: " + status);
