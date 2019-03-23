@@ -173,7 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Dialogs\BasicLuisDialog.cs" />
+    <Compile Include="Dialogs\JenkinsDialog.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\RestApi.cs" />
     <Compile Include="Global.asax.cs">

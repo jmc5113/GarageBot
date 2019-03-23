@@ -11,13 +11,13 @@ using Newtonsoft.Json;
 using HttpUtils;
 using Microsoft.Bot.Connector;
 
-namespace Microsoft.Bot.Sample.LuisBot
+namespace Microsoft.Bot.Jenkins
 {
     // For more information about this template visit http://aka.ms/azurebots-csharp-luis
     [Serializable]
-    public class BasicLuisDialog : LuisDialog<object>
+    public class JenkinsDialog : LuisDialog<object>
     {
-        public BasicLuisDialog() : base(new LuisService(new LuisModelAttribute(
+        public JenkinsDialog() : base(new LuisService(new LuisModelAttribute(
             ConfigurationManager.AppSettings["LuisAppId"], 
             ConfigurationManager.AppSettings["LuisAPIKey"], 
             domain: ConfigurationManager.AppSettings["LuisAPIHostName"])))
@@ -60,7 +60,7 @@ namespace Microsoft.Bot.Sample.LuisBot
                 await context.PostAsync(response);
             }
 
-            await context.PostAsync("Open Intent Finished: " + status);
+            await context.PostAsync("Status Intent Finished: " + status);
         }
 
         // Go to https://luis.ai and create a new intent, then train/publish your luis app.

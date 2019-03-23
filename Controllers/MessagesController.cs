@@ -8,7 +8,7 @@ using System.Web.Http.Description;
 using System.Net.Http;
 using System.Diagnostics;
 
-namespace Microsoft.Bot.Sample.LuisBot
+namespace Microsoft.Bot.Jenkins
 {
     [BotAuthentication]
     public class MessagesController : ApiController
@@ -24,7 +24,7 @@ namespace Microsoft.Bot.Sample.LuisBot
             // check if activity is of type message
             if (activity.GetActivityType() == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => new BasicLuisDialog());
+                await Conversation.SendAsync(activity, () => new JenkinsDialog());
             }
             else
             {
